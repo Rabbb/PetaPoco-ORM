@@ -113,6 +113,14 @@ namespace PetaPoco.Internal
                             found = true;
                             break;
                         }
+
+                        var fi = o.GetType().GetField(param);
+                        if (fi != null)
+                        {
+                            arg_val = fi.GetValue(o);
+                            found = true;
+                            break;
+                        }
                     }
 
                     if (!found)
