@@ -1,0 +1,50 @@
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" encoding="UTF-8" #>
+<#@ include file="../PetaPoco.Core.ttinclude" #><#
+
+    // Settings
+    ConnectionStringName = "DB1";            // Uses last connection string in config if not specified
+    Namespace = "";
+    RepoName = "";
+    IncludeViews = true;
+    GenerateOperations = true;
+    GeneratePocos = true;
+    GenerateCommon = true;
+    ClassPrefix = ConnectionStringName.ToLowerInvariant() + "_";
+    ClassSuffix = "";
+    TrackModifiedColumns = false;
+    ExcludePrefix = new string[] {}; // Exclude tables by prefix.
+
+    if (string.IsNullOrEmpty(Namespace)) Namespace = ConnectionStringName;
+    if (string.IsNullOrEmpty(Namespace)) Namespace = "PetaPoco";
+    if (string.IsNullOrEmpty(RepoName) && !string.IsNullOrEmpty(ConnectionStringName))
+        RepoName = ConnectionStringName + "DB";
+    if (string.IsNullOrEmpty(RepoName)) RepoName = "PetaPocoDB";
+    // 删除旧cs文件, 排除以下 2024-1-4 Ciaran
+    var b_deleteOldCsFile = true;
+    var deleteOldCsFileExcepts = new List<string>
+    {
+        // "Class1.cs"
+    };
+    // 在这里设置要更新的表或视图, 如果要更新所有, 则设置updateEntityNames为null; 2024-1-4 Ciaran
+    var updateEntityNames = new HashSet<string>();
+    updateEntityNames = null;
+
+    // Read schema
+    var tables = LoadTables();
+/*
+    // Tweak Schema
+    tables["tablename"].Ignore = true;                            // To ignore a table
+    tables["tablename"].ClassName = "newname";                    // To change the class name of a table
+    tables["tablename"]["columnname"].Ignore = true;            // To ignore a column
+    tables["tablename"]["columnname"].PropertyName="newname";    // To change the property name of a column
+    tables["tablename"]["columnname"].PropertyType="bool";        // To change the property type of a column
+*/
+    if (updateEntityNames != null) {
+        foreach(var tbl in tables) {
+            if (updateEntityNames.Contains(tbl.ClassName) == false)
+                tbl.Ignore = true;
+        }
+    }
+
+#><#@ include file="../PetaPoco.GenerateMain.ttinclude" #>

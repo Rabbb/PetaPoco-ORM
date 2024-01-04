@@ -1,0 +1,60 @@
+﻿<#@ include file="../PetaPoco.GenerateBaseClass.ttinclude" #><#
+if (GeneratePocos)
+{
+
+    string outputPath = Path.GetDirectoryName(Host.TemplateFile) + "/";
+    var project = GetCurrentProject();
+    var project_items = new Dictionary<string, EnvDTE.ProjectItem>();
+    if (project != null)
+    {
+        // 获取文件路径全名, 用于比较并添加到项目中 2024-1-4 Ciaran
+        // https://learn.microsoft.com/zh-cn/dotnet/api/envdte.projectitem?view=visualstudiosdk-2022
+        foreach(EnvDTE.ProjectItem item in project.ProjectItems) project_items.Add(item.FileNames[0], item);
+    }
+    var entityFileNames = new HashSet<string>();
+    // Datebase.cs
+    entityFileNames.Add(Host.TemplateFile.Substring(0, Host.TemplateFile.Length-3) + ".cs");
+
+    // Generate output
+    foreach (Table tbl in tables)
+    {
+        // 将各个类分别保存到不同文件中 2024-1-4 Ciaran
+        string fileName = outputPath + tbl.ClassName + ".cs";
+        entityFileNames.Add(fileName);
+        if (tbl.Ignore) continue;
+        var start_index = GenerationEnvironment.Length;
+#><#@ include file="../PetaPoco.GenerateEntity.ttinclude" #><#
+        var len = GenerationEnvironment.Length - start_index;
+        string content = GenerationEnvironment.ToString(start_index, len);
+        File.WriteAllText(fileName, content, Encoding.UTF8);
+        GenerationEnvironment.Remove(start_index, len);
+        if (project != null && !project_items.ContainsKey(fileName))
+        {
+            project_items.Add(fileName, project.ProjectItems.AddFromFile(fileName));
+        }
+    }
+
+    if (b_deleteOldCsFile)
+    {
+        var files = Directory.EnumerateFiles(outputPath).Where(s => s.EndsWith(".cs")).ToList();
+        foreach(var filename1 in files)
+        {
+            var filename2 = Path.GetFileName(filename1);
+            if (!entityFileNames.Contains(filename1) && !deleteOldCsFileExcepts.Contains(filename2))
+            {
+                if (project_items.ContainsKey(filename1))
+                {
+                    project_items[filename1].Delete();
+                }
+                else
+                {
+                    System.IO.File.Delete(filename1);
+                }
+                
+            }
+
+        }
+
+    }
+}
+#>

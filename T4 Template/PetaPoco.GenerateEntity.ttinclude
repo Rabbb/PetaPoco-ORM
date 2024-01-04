@@ -1,0 +1,99 @@
+﻿using PetaPoco;
+namespace <#= Namespace #>;
+<#
+if (string.IsNullOrEmpty(tbl.Schema))
+{
+#>
+[TableName("<#= tbl.Name #>")]
+<#
+}
+else
+{
+#>
+[TableName("<#= tbl.Schema + "." + tbl.Name #>")]
+<#
+}
+if (tbl.PK != null && tbl.PK.IsAutoIncrement)
+{
+    if (tbl.SequenceName == null)
+    {
+#>
+[PrimaryKey("<#= tbl.PK.Name #>")]
+<#
+    }
+    else
+    {
+#>
+[PrimaryKey("<#= tbl.PK.Name #>", sequenceName="<#= tbl.SequenceName #>")]
+<#
+    }
+}
+if (tbl.PK != null && !tbl.PK.IsAutoIncrement)
+{
+#>
+[PrimaryKey("<#= tbl.PK.Name #>", AutoIncrement=false)]
+<#
+}
+#>
+[ExplicitColumns]
+[Serializable]
+public partial class <#= tbl.ClassName #> <#
+if (GenerateOperations)
+{
+#>: <#= RepoName #>.Record<<#= tbl.ClassName #>> <#
+}
+#>
+
+{
+<#
+foreach (Column col in from c in tbl.Columns where !c.Ignore select c)
+{
+    // Column bindings
+    if (!string.IsNullOrWhiteSpace(col.Comment))
+    {
+#>
+
+    ///<summary>
+    ///<#= col.Comment.Replace("\r\n", "<\br>\r\n        ///") #>
+    ///</summary>
+<#
+    }
+    if (col.Name != col.PropertyName) 
+    { #>
+    [Column("<#= col.Name #>")] 
+<#
+    }
+    else
+    {
+#>
+    [Column] 
+<#
+    }
+    if (TrackModifiedColumns)
+    {
+        
+#>
+    public <#= col.PropertyType #><#= CheckNullable(col) #> <#= col.PropertyName #> 
+    { 
+        get
+        {
+            return _<#= col.PropertyName #>;
+        }
+        set
+        {
+            _<#= col.PropertyName #> = value;
+            MarkColumnModified("<#= col.Name #>");
+        }
+    }
+    <#= col.PropertyType #><#= CheckNullable(col) #> _<#= col.PropertyName #><#= CheckDefault(col) #>;
+<#
+    }
+    else
+    {
+#>
+    public <#= col.PropertyType #><#= CheckNullable(col) #> <#= col.PropertyName #> { get; set; }<#= CheckDefaultEnd(col) #>
+<#
+    }
+}
+#>
+}
