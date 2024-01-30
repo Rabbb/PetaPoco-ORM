@@ -141,7 +141,7 @@ public partial class <#= RepoName #> : Database
             if (TrackModifiedColumns)
             {
 #>
-        public Dictionary<string,bool> ModifiedColumns;
+        private Dictionary<string,bool> ModifiedColumns;
         private void OnLoaded()
         {
             ModifiedColumns = new Dictionary<string,bool>();
