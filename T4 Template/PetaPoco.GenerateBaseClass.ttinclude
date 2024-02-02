@@ -8,15 +8,25 @@ namespace <#= Namespace #>;
 public partial class <#= RepoName #> : Database
 {
     public <#= RepoName #>() 
-        : base("<#= _connectionString #>", "<#= _providerName #>")
+        : base("<#=ConnectionStringName#>")
     {
         CommonConstruct();
+        this.CommandTimeout = 2 * 60 * 1000;
+    }
+
+
+    public <#=RepoName#>(string connectionStringName) 
+        : base(connectionStringName)
+    {
+        CommonConstruct();
+        this.CommandTimeout = 2 * 60 * 1000;
     }
 
     public <#= RepoName #>(string connectionString, string providerName) 
         : base(connectionString, providerName)
     {
         CommonConstruct();
+        this.CommandTimeout = 2 * 60 * 1000;
     }
         
     partial void CommonConstruct();
