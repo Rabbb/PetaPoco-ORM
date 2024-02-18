@@ -643,13 +643,13 @@ namespace PetaPoco
         #region SingleOrDefaultAsync
 
         /// <inheritdoc cref="SingleOrDefaultAsync{T}(CancellationToken, object)"/>
-        Task<T> SingleOrDefaultAsync<T>(object primaryKey);
+        Task<T?> SingleOrDefaultAsync<T>(object primaryKey);
 
         /// <inheritdoc cref="SingleOrDefaultAsync{T}(CancellationToken, Sql)"/>
-        Task<T> SingleOrDefaultAsync<T>(Sql sql);
+        Task<T?> SingleOrDefaultAsync<T>(Sql sql);
 
         /// <inheritdoc cref="SingleOrDefaultAsync{T}(CancellationToken, string, object[])"/>
-        Task<T> SingleOrDefaultAsync<T>(string sql, params object[] args);
+        Task<T?> SingleOrDefaultAsync<T>(string sql, params object[] args);
 
         /// <summary>
         /// Asynchronously returns the only record that matches the specified primary key value, or a default value if the result set is
@@ -663,12 +663,12 @@ namespace PetaPoco
         /// single result returned by the specified query.
         /// </returns>
         /// <exception cref="InvalidOperationException">The result set contains more than one record.</exception>
-        Task<T> SingleOrDefaultAsync<T>(CancellationToken cancellationToken, object primaryKey);
+        Task<T?> SingleOrDefaultAsync<T>(CancellationToken cancellationToken, object primaryKey);
 
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
         /// <param name="sql">An SQL builder instance representing the SQL query and its parameters.</param>
         /// <inheritdoc cref="SingleOrDefaultAsync{T}(CancellationToken, string, object[])"/>
-        Task<T> SingleOrDefaultAsync<T>(CancellationToken cancellationToken, Sql sql);
+        Task<T?> SingleOrDefaultAsync<T>(CancellationToken cancellationToken, Sql sql);
 
         /// <summary>
         /// Asynchronously returns the only record that matches the specified query, or a default value if the result set is empty; this
@@ -683,7 +683,7 @@ namespace PetaPoco
         /// single result returned by the specified query.
         /// </returns>
         /// <exception cref="InvalidOperationException">The result set contains more than one record.</exception>
-        Task<T> SingleOrDefaultAsync<T>(CancellationToken cancellationToken, string sql, params object[] args);
+        Task<T?> SingleOrDefaultAsync<T>(CancellationToken cancellationToken, string sql, params object[] args);
 
         #endregion
 
@@ -718,15 +718,15 @@ namespace PetaPoco
         #region FirstOrDefaultAsync
 
         /// <inheritdoc cref="FirstOrDefaultAsync{T}(CancellationToken, Sql)"/>
-        Task<T> FirstOrDefaultAsync<T>(Sql sql);
+        Task<T?> FirstOrDefaultAsync<T>(Sql sql);
 
         /// <inheritdoc cref="FirstOrDefaultAsync{T}(CancellationToken, string, object[])"/>
-        Task<T> FirstOrDefaultAsync<T>(string sql, params object[] args);
+        Task<T?> FirstOrDefaultAsync<T>(string sql, params object[] args);
 
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
         /// <param name="sql">An SQL builder instance representing the SQL query and its parameters.</param>
         /// <inheritdoc cref="FirstOrDefaultAsync{T}(CancellationToken, string, object[])"/>
-        Task<T> FirstOrDefaultAsync<T>(CancellationToken cancellationToken, Sql sql);
+        Task<T?> FirstOrDefaultAsync<T>(CancellationToken cancellationToken, Sql sql);
 
         /// <summary>
         /// Asynchronously returns the first result returned by the specified query, or a default value if the result set is empty.
@@ -739,7 +739,7 @@ namespace PetaPoco
         /// A task that represents the asynchronous operation. The task result contains default(T) if the result set is empty; otherwise,
         /// the first result returned by the specified query.
         /// </returns>
-        Task<T> FirstOrDefaultAsync<T>(CancellationToken cancellationToken, string sql, params object[] args);
+        Task<T?> FirstOrDefaultAsync<T>(CancellationToken cancellationToken, string sql, params object[] args);
 
         #endregion
     }

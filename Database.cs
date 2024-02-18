@@ -1811,27 +1811,27 @@ namespace PetaPoco
 
 #if ASYNC
         /// <inheritdoc/>
-        public Task<T> SingleOrDefaultAsync<T>(object primaryKey)
+        public Task<T?> SingleOrDefaultAsync<T>(object primaryKey)
             => SingleOrDefaultAsync<T>(CancellationToken.None, primaryKey);
 
         /// <inheritdoc/>
-        public Task<T> SingleOrDefaultAsync<T>(Sql sql)
+        public Task<T?> SingleOrDefaultAsync<T>(Sql sql)
             => SingleOrDefaultAsync<T>(CancellationToken.None, sql);
 
         /// <inheritdoc/>
-        public Task<T> SingleOrDefaultAsync<T>(string sql, params object[] args)
+        public Task<T?> SingleOrDefaultAsync<T>(string sql, params object[] args)
             => SingleOrDefaultAsync<T>(CancellationToken.None, sql, args);
 
         /// <inheritdoc/>
-        public Task<T> SingleOrDefaultAsync<T>(CancellationToken cancellationToken, object primaryKey)
+        public Task<T?> SingleOrDefaultAsync<T>(CancellationToken cancellationToken, object primaryKey)
             => SingleOrDefaultAsync<T>(cancellationToken, GenerateSingleByKeySql<T>(primaryKey));
 
         /// <inheritdoc/>
-        public Task<T> SingleOrDefaultAsync<T>(CancellationToken cancellationToken, Sql sql)
+        public Task<T?> SingleOrDefaultAsync<T>(CancellationToken cancellationToken, Sql sql)
             => SingleOrDefaultAsync<T>(cancellationToken, sql.SQL, sql.Arguments);
 
         /// <inheritdoc/>
-        public async Task<T> SingleOrDefaultAsync<T>(CancellationToken cancellationToken, string sql, params object[] args)
+        public async Task<T?> SingleOrDefaultAsync<T>(CancellationToken cancellationToken, string sql, params object[] args)
             => (await FetchAsync<T>(cancellationToken, sql, args).ConfigureAwait(false)).SingleOrDefault();
 #endif
 
@@ -1882,28 +1882,28 @@ namespace PetaPoco
         #region FirstOrDefault, FirstOrDefaultAsync
 
         /// <inheritdoc/>
-        public T FirstOrDefault<T>(Sql sql)
+        public T? FirstOrDefault<T>(Sql sql)
             => Query<T>(sql).FirstOrDefault();
 
         /// <inheritdoc/>
-        public T FirstOrDefault<T>(string sql, params object[] args)
+        public T? FirstOrDefault<T>(string sql, params object[] args)
             => Query<T>(sql, args).FirstOrDefault();
 
 #if ASYNC
         /// <inheritdoc/>
-        public Task<T> FirstOrDefaultAsync<T>(Sql sql)
+        public Task<T?> FirstOrDefaultAsync<T>(Sql sql)
             => FirstOrDefaultAsync<T>(CancellationToken.None, sql);
 
         /// <inheritdoc/>
-        public Task<T> FirstOrDefaultAsync<T>(string sql, params object[] args)
+        public Task<T?> FirstOrDefaultAsync<T>(string sql, params object[] args)
             => FirstOrDefaultAsync<T>(CancellationToken.None, sql, args);
 
         /// <inheritdoc/>
-        public Task<T> FirstOrDefaultAsync<T>(CancellationToken cancellationToken, Sql sql)
+        public Task<T?> FirstOrDefaultAsync<T>(CancellationToken cancellationToken, Sql sql)
             => FirstOrDefaultAsync<T>(cancellationToken, sql.SQL, sql.Arguments);
 
         /// <inheritdoc/>
-        public async Task<T> FirstOrDefaultAsync<T>(CancellationToken cancellationToken, string sql, params object[] args)
+        public async Task<T?> FirstOrDefaultAsync<T>(CancellationToken cancellationToken, string sql, params object[] args)
             => (await FetchAsync<T>(cancellationToken, sql, args).ConfigureAwait(false)).FirstOrDefault();
 #endif
 
