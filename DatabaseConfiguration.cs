@@ -6,7 +6,7 @@ namespace PetaPoco
     /// <summary>
     /// A helper class which enables fluent configuration.
     /// </summary>
-    public class DatabaseConfiguration : IDatabaseBuildConfiguration, IBuildConfigurationSettings, IHideObjectMethods
+    public sealed class DatabaseConfiguration : IDatabaseBuildConfiguration, IBuildConfigurationSettings, IHideObjectMethods
     {
         private readonly IDictionary<string, object> _settings = new Dictionary<string, object>();
 
@@ -17,7 +17,7 @@ namespace PetaPoco
         {
         }
 
-        void IBuildConfigurationSettings.SetSetting(string key, object value)
+        void IBuildConfigurationSettings.SetSetting(string key, object? value)
         {
             // Note: no argument checking because, pref, enduser unlikely and handled by RT/FW
             if (value != null)
@@ -26,7 +26,7 @@ namespace PetaPoco
                 _settings.Remove(key);
         }
 
-        void IBuildConfigurationSettings.TryGetSetting<T>(string key, Action<T> onGetAction, Action onFailAction)
+        void IBuildConfigurationSettings.TryGetSetting<T>(string key, Action<T> onGetAction, Action? onFailAction)
         {
             // Note: no argument checking because, pref, enduser unlikely and handled by RT/FW
             if (_settings.TryGetValue(key, out var setting))

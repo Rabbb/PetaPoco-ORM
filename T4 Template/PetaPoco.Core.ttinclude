@@ -206,6 +206,8 @@ string CheckDefault(Column col)
     {
         if (col.PropertyType =="string")
             return " = \"\"";
+        if (col.PropertyType =="byte[]")
+            return " = new byte[0]";
     }
     return "";
 }

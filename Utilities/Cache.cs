@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 
 namespace PetaPoco.Internal
 {
-    internal class Cache<TKey, TValue>
+    internal class Cache<TKey, TValue> where TKey : notnull
     {
         private readonly ConcurrentDictionary<TKey, Lazy<TValue>> _map = new ConcurrentDictionary<TKey, Lazy<TValue>>();
 

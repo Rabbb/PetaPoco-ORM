@@ -64,7 +64,7 @@ namespace PetaPoco.Core
         public virtual string GetExistsSql() => "SELECT COUNT(*) FROM {0} WHERE {1}";
 
         /// <inheritdoc/>
-        public virtual string GetAutoIncrementExpression(TableInfo tableInfo) => null;
+        public virtual string? GetAutoIncrementExpression(TableInfo tableInfo) => null;
 
         /// <inheritdoc/>
         public virtual string GetInsertOutputClause(string primaryKeyName) => string.Empty;
@@ -93,7 +93,7 @@ namespace PetaPoco.Core
         /// <exception cref="ArgumentException">None of the <paramref name="assemblyQualifiedNames"/> match a type.</exception>
         protected DbProviderFactory GetFactory(params string[] assemblyQualifiedNames)
         {
-            Type ft = null;
+            Type? ft = null;
             foreach (var assemblyName in assemblyQualifiedNames)
             {
                 ft = Type.GetType(assemblyName);
@@ -105,7 +105,7 @@ namespace PetaPoco.Core
             if (ft == null)
                 throw new ArgumentException($"Could not load the {GetType().Name} DbProviderFactory.");
 
-            return (DbProviderFactory)ft.GetField("Instance").GetValue(null);
+            return (DbProviderFactory)ft.GetField("Instance")!.GetValue(null)!;
         }
 
         /// <summary>
@@ -124,9 +124,9 @@ namespace PetaPoco.Core
             customProviders[initialString] = Singleton<T>.Instance;
         }
 
-        private static IProvider GetCustomProvider(string name)
+        private static IProvider? GetCustomProvider(string name)
         {
-            IProvider provider;
+            IProvider? provider;
             foreach (var initialString in customProviders.Keys)
                 if (name.IndexOf(initialString, StringComparison.InvariantCultureIgnoreCase) == 0 && customProviders.TryGetValue(initialString, out provider))
                     return provider;

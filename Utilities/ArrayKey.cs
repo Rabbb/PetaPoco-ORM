@@ -19,7 +19,7 @@
             }
         }
 
-        private bool Equals(ArrayKey<T> other)
+        private bool Equals(ArrayKey<T>? other)
         {
             if (other == null)
                 return false;
@@ -39,7 +39,7 @@
             return true;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return Equals(obj as ArrayKey<T>);
         }

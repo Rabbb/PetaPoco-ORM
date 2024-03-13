@@ -21,7 +21,7 @@ namespace PetaPoco
         /// <summary>
         /// Gets or sets the optional sequence name, for Oracle databases.
         /// </summary>
-        public string SequenceName { get; set; }
+        public string? SequenceName { get; set; }
 
         /// <summary>
         /// Gets or sets whether the primary key column represented by this property in the database is auto-incrementing.

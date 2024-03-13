@@ -184,7 +184,7 @@ namespace PetaPoco
 
         /// <param name="sql">An SQL builder instance representing the SQL query and its parameters.</param>
         /// <inheritdoc cref="QueryMultiple(string, object[])"/>
-        IGridReader QueryMultiple(Sql sql);
+        IGridReader? QueryMultiple(Sql sql);
 
         /// <summary>
         /// Executes a multi-result set query.
@@ -192,7 +192,7 @@ namespace PetaPoco
         /// <param name="sql">The SQL query string.</param>
         /// <param name="args">The parameters to embed in the SQL string.</param>
         /// <returns>A GridReader for reading the sequence of results.</returns>
-        IGridReader QueryMultiple(string sql, params object[] args);
+        IGridReader? QueryMultiple(string sql, params object[] args);
 
         #endregion
 
@@ -563,11 +563,11 @@ namespace PetaPoco
         /// <param name="primaryKey">The primary key value.</param>
         /// <returns>default(T) if no record is found; otherwise, the single result returned by the query.</returns>
         /// <exception cref="InvalidOperationException">The result set contains more than one record.</exception>
-        T SingleOrDefault<T>(object primaryKey);
+        T? SingleOrDefault<T>(object primaryKey);
 
         /// <param name="sql">An SQL builder instance representing the SQL query and its parameters.</param>
         /// <inheritdoc cref="SingleOrDefault{T}(string, object[])"/>
-        T SingleOrDefault<T>(Sql sql);
+        T? SingleOrDefault<T>(Sql sql);
 
         /// <summary>
         /// Returns the only record that matches the specified query, or a default value if the result set is empty; this method throws an
@@ -578,7 +578,7 @@ namespace PetaPoco
         /// <param name="args">The parameters to embed in the SQL string.</param>
         /// <returns>default(T) if no record is found; otherwise, the single result returned by the query.</returns>
         /// <exception cref="InvalidOperationException">The result set contains more than one record.</exception>
-        T SingleOrDefault<T>(string sql, params object[] args);
+        T? SingleOrDefault<T>(string sql, params object[] args);
 
         #endregion
 
@@ -604,7 +604,7 @@ namespace PetaPoco
 
         /// <param name="sql">An SQL builder instance representing the SQL query and its parameters.</param>
         /// <inheritdoc cref="FirstOrDefault{T}(string, object[])"/>
-        T FirstOrDefault<T>(Sql sql);
+        T? FirstOrDefault<T>(Sql sql);
 
         /// <summary>
         /// Returns the first record that matches the specified query, or a default value if the result set is empty.
@@ -613,7 +613,7 @@ namespace PetaPoco
         /// <param name="sql">The SQL query string.</param>
         /// <param name="args">The parameters to embed in the SQL string.</param>
         /// <returns>default(T) if the result set is empty; otherwise, the first record that matches the specified query.</returns>
-        T FirstOrDefault<T>(string sql, params object[] args);
+        T? FirstOrDefault<T>(string sql, params object[] args);
 
         #endregion
     }

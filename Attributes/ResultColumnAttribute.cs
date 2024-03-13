@@ -71,7 +71,7 @@ namespace PetaPoco
         /// </summary>
         /// <param name="column">The name of the database column associated with this property.</param>
         /// <param name="includeInAutoSelect">Specifies whether the property should be included in auto-select queries.</param>
-        public ResultColumnAttribute(string column, IncludeInAutoSelect includeInAutoSelect)
+        public ResultColumnAttribute(string? column, IncludeInAutoSelect includeInAutoSelect)
             : base(column)
         {
             IncludeInAutoSelect = includeInAutoSelect;

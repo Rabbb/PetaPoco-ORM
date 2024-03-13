@@ -1,11 +1,15 @@
-﻿namespace PetaPoco
+﻿using System.Runtime.InteropServices;
+using System;
+
+namespace PetaPoco
 {
     /// <summary>
     /// A scoped Transaction object to facilitate maintaining transaction depth counts and proper rollbacks.
     /// </summary>
     public class Transaction : ITransaction
     {
-        private IDatabase _db;
+        private IDatabase? _db;
+        private bool isDisposed;
 
         /// <summary>
         /// Creates a new Transaction instance for the specified database, and begins the transaction.
@@ -21,8 +25,11 @@
         /// <inheritdoc/>
         public void Complete()
         {
-            _db.CompleteTransaction();
-            _db = null;
+            if (_db != null)
+            {
+                _db.CompleteTransaction();
+                _db = null;
+            }
         }
 
 
@@ -32,7 +39,34 @@
         /// <seealso cref="IDatabase.AbortTransaction"/>
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// The bulk of the clean-up code is implemented in Dispose(bool)
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
             _db?.AbortTransaction();
+            if (isDisposed) return;
+
+            if (disposing)
+            {
+                // free managed resources
+            }
+
+            isDisposed = true;
+        }
+
+        /// <summary>
+        /// Finalizer
+        /// </summary>
+        ~Transaction()
+        {
+            // Finalizer calls Dispose(false)
+            Dispose(false);
         }
     }
 }

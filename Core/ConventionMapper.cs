@@ -16,7 +16,7 @@ namespace PetaPoco
         /// <summary>
         /// Gets or sets the sequence name logic (for Oracle).
         /// </summary>
-        public Func<Type, PropertyInfo, string> GetSequenceName { get; set; }
+        public Func<Type, PropertyInfo, string?> GetSequenceName { get; set; }
 
         /// <summary>
         /// Gets or sets the inflected column name logic.
@@ -36,7 +36,7 @@ namespace PetaPoco
         /// <summary>
         /// Gets or sets the map column logic.
         /// </summary>
-        public Func<ColumnInfo, Type, PropertyInfo, bool> MapColumn { get; set; }
+        public Func<ColumnInfo, Type?, PropertyInfo, bool> MapColumn { get; set; }
 
         /// <summary>
         /// Gets or sets the map primary key logic.
@@ -51,12 +51,12 @@ namespace PetaPoco
         /// <summary>
         /// Gets or sets the from db convert logic.
         /// </summary>
-        public Func<PropertyInfo, Type, Func<object, object>> FromDbConverter { get; set; }
+        public Func<PropertyInfo, Type, Func<object, object>?> FromDbConverter { get; set; }
 
         /// <summary>
         /// Gets or sets the to db converter logic.
         /// </summary>
-        public Func<PropertyInfo, Func<object, object>> ToDbConverter { get; set; }
+        public Func<PropertyInfo, Func<object, object>?> ToDbConverter { get; set; }
 
         /// <summary>
         /// Constructs a new instance of convention mapper.
@@ -70,20 +70,18 @@ namespace PetaPoco
             {
                 TableInfo.PopulatePrimaryKeyFromPoco(t, ref ti, out var pkAttr, out var idProp);
 
-                if (pkAttr == null && idProp == null)
-                    return false;
-                else
-                {
-                    // If there's no pkAttr, then there's extra processing
-                    if (pkAttr == null)
-                    {
-                        ti.PrimaryKey = InflectColumnName(Inflector.Instance, idProp.Name);
-                        ti.AutoIncrement = IsPrimaryKeyAutoIncrement(idProp.PropertyType);
-                        ti.SequenceName = GetSequenceName(t, idProp);
-                    }
-
+                if (pkAttr != null)
                     return true;
-                }
+
+                if (idProp == null)
+                    return false;
+
+                // If there's no pkAttr, then there's extra processing
+                ti.PrimaryKey = InflectColumnName(Inflector.Instance, idProp.Name);
+                ti.AutoIncrement = IsPrimaryKeyAutoIncrement!(idProp.PropertyType);
+                ti.SequenceName = GetSequenceName(t, idProp);
+
+                return true;
             };
             MapTable = (ti, t) =>
             {
@@ -150,27 +148,27 @@ namespace PetaPoco
         }
 
         /// <inheritdoc/>
-        public virtual TableInfo GetTableInfo(Type pocoType)
+        public virtual TableInfo? GetTableInfo(Type pocoType)
         {
             var ti = new TableInfo();
             return MapTable(ti, pocoType) ? ti : null;
         }
 
         /// <inheritdoc/>
-        public virtual ColumnInfo GetColumnInfo(PropertyInfo pocoProperty)
+        public virtual ColumnInfo? GetColumnInfo(PropertyInfo pocoProperty)
         {
             var ci = new ColumnInfo();
             return MapColumn(ci, pocoProperty.DeclaringType, pocoProperty) ? ci : null;
         }
 
         /// <inheritdoc/>
-        public virtual Func<object, object> GetFromDbConverter(PropertyInfo targetProperty, Type sourceType)
+        public virtual Func<object, object>? GetFromDbConverter(PropertyInfo targetProperty, Type sourceType)
         {
             return FromDbConverter?.Invoke(targetProperty, sourceType);
         }
 
         /// <inheritdoc/>
-        public virtual Func<object, object> GetToDbConverter(PropertyInfo sourceProperty)
+        public virtual Func<object, object>? GetToDbConverter(PropertyInfo sourceProperty)
         {
             return ToDbConverter?.Invoke(sourceProperty);
         }

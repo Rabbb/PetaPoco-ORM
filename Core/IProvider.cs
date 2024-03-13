@@ -116,7 +116,7 @@ namespace PetaPoco.Core
         /// </remarks>
         /// <param name="tableInfo">The TableInfo instance describing the table.</param>
         /// <returns>An SQL expression.</returns>
-        string GetAutoIncrementExpression(TableInfo tableInfo);
+        string? GetAutoIncrementExpression(TableInfo tableInfo);
 
         /// <summary>
         /// Returns the DbProviderFactory.

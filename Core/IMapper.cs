@@ -23,7 +23,7 @@ namespace PetaPoco
         /// </remarks>
         /// <param name="pocoType">The POCO type representing a single result record in the associated database table.</param>
         /// <returns>A TableInfo instance.</returns>
-        TableInfo GetTableInfo(Type pocoType);
+        TableInfo? GetTableInfo(Type pocoType);
 
         /// <summary>
         /// Returns a <see cref="ColumnInfo"/> object containing information about the column associated with a property of a POCO.
@@ -33,7 +33,7 @@ namespace PetaPoco
         /// </remarks>
         /// <param name="pocoProperty">The PropertyInfo for the property that maps to the associated database column.</param>
         /// <returns>A ColumnInfo instance, or <see langword="null"/> if the property should be ignored.</returns>
-        ColumnInfo GetColumnInfo(PropertyInfo pocoProperty);
+        ColumnInfo? GetColumnInfo(PropertyInfo pocoProperty);
 
         /// <summary>
         /// Supplies a function to convert a database value to the correct property value.
@@ -41,7 +41,7 @@ namespace PetaPoco
         /// <param name="targetProperty">The target property.</param>
         /// <param name="sourceType">The data type returned by the database.</param>
         /// <returns>A function to perform the conversion, or <see langword="null"/> if no conversion is needed.</returns>
-        Func<object, object> GetFromDbConverter(PropertyInfo targetProperty, Type sourceType);
+        Func<object, object>? GetFromDbConverter(PropertyInfo targetProperty, Type sourceType);
 
         /// <summary>
         /// Supplies a function to convert a property value to the correct database value.
@@ -52,6 +52,6 @@ namespace PetaPoco
         /// </remarks>
         /// <param name="sourceProperty">The property to be converted.</param>
         /// <returns>A function to perform the conversion, or <see langword="null"/> if no conversion is needed.</returns>
-        Func<object, object> GetToDbConverter(PropertyInfo sourceProperty);
+        Func<object, object>? GetToDbConverter(PropertyInfo sourceProperty);
     }
 }

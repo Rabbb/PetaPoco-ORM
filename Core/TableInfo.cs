@@ -12,12 +12,12 @@ namespace PetaPoco
         /// <summary>
         /// Gets or sets the database table name.
         /// </summary>
-        public string TableName { get; set; }
+        public string? TableName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the table's primary key column.
         /// </summary>
-        public string PrimaryKey { get; set; }
+        public string? PrimaryKey { get; set; }
 
         /// <summary>
         /// Gets or sets whether the primary key column is auto-incrementing.
@@ -27,7 +27,7 @@ namespace PetaPoco
         /// <summary>
         /// Gets or sets the name of the sequence used for auto-incrementing Oracle primary key fields.
         /// </summary>
-        public string SequenceName { get; set; }
+        public string? SequenceName { get; set; }
 
         /// <summary>
         /// Constructs and initializes a TableInfo instance from the attributes of the specified POCO type.
@@ -42,14 +42,14 @@ namespace PetaPoco
             return ti;
         }
 
-        internal static void PopulateTableNameFromPoco(Type t, ref TableInfo ti, out TableNameAttribute tblAttr)
+        internal static void PopulateTableNameFromPoco(Type t, ref TableInfo ti, out TableNameAttribute? tblAttr)
         {
             ti = ti ?? new TableInfo();
             tblAttr = t.GetCustomAttributes(typeof(TableNameAttribute), true).FirstOrDefault() as TableNameAttribute;
             ti.TableName = tblAttr?.Value ?? t.Name;
         }
 
-        internal static void PopulatePrimaryKeyFromPoco(Type t, ref TableInfo ti, out PrimaryKeyAttribute pkAttr, out PropertyInfo idProp)
+        internal static void PopulatePrimaryKeyFromPoco(Type t, ref TableInfo ti, out PrimaryKeyAttribute? pkAttr, out PropertyInfo? idProp)
         {
             ti = ti ?? new TableInfo();
             pkAttr = t.GetCustomAttributes(typeof(PrimaryKeyAttribute), true).FirstOrDefault() as PrimaryKeyAttribute;

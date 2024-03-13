@@ -33,6 +33,6 @@ namespace PetaPoco
 
         /// <inheritdoc cref="object.ToString()"/>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        string ToString();
+        string? ToString();
     }
 }

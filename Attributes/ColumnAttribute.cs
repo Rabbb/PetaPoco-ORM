@@ -16,7 +16,7 @@ namespace PetaPoco
         /// Gets or sets the database column name this property maps to.
         /// </summary>
         /// <value>When not <see langword="null"/>, overrides this property's inflected column name from the mapper.</value>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Gets or sets whether the column is of type <see cref="AnsiString"/> (SQL DB data type <c>VARCHAR</c>).
@@ -58,7 +58,7 @@ namespace PetaPoco
         /// <para>Setting this allows database-related interactions, such as:
         /// <br/><c>String.Format("CAST({0}{1} AS JSON)", paramPrefix, index)</c>.</para>
         /// </remarks>
-        public string InsertTemplate { get; set; }
+        public string? InsertTemplate { get; set; }
 
         /// <summary>
         /// Gets or sets the UPDATE string template.
@@ -69,7 +69,7 @@ namespace PetaPoco
         /// <para>Setting this allows database-related interactions, such as:
         /// <br/><c>String.Format("{0} = CAST({1}{2} AS JSON)", colName, paramPrefix, index)</c></para>
         /// </remarks>
-        public string UpdateTemplate { get; set; }
+        public string? UpdateTemplate { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ColumnAttribute"/> class with default values.
@@ -82,7 +82,7 @@ namespace PetaPoco
         /// Initializes a new instance of the <see cref="ColumnAttribute"/> class with the specified column name.
         /// </summary>
         /// <param name="column">The name of the database column associated with this property.</param>
-        public ColumnAttribute(string column)
+        public ColumnAttribute(string? column)
         {
             Name = column;
         }
