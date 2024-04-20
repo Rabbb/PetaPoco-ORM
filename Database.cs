@@ -586,8 +586,8 @@ namespace PetaPoco
                     await OpenSharedConnectionAsync(cancellationToken).ConfigureAwait(false);
                     _transaction = !_isolationLevel.HasValue
 #if NETSTANDARD2_1
-                        ? await asyncConn.BeginTransactionAsync().ConfigureAwait(false)
-                        : await asyncConn.BeginTransactionAsync(_isolationLevel.Value).ConfigureAwait(false);
+                        ? await asyncConn.BeginTransactionAsync()
+                        : await asyncConn.BeginTransactionAsync(_isolationLevel.Value);
 #else
                         ? _sharedConnection.BeginTransaction()
                         : _sharedConnection.BeginTransaction(_isolationLevel.Value);
@@ -843,7 +843,7 @@ namespace PetaPoco
                 {
                     using (var cmd = CreateCommand(_sharedConnection, commandType, sql, args))
                     {
-                        return await ExecuteNonQueryHelperAsync(cancellationToken, cmd).ConfigureAwait(false);
+                        return await ExecuteNonQueryHelperAsync(cancellationToken, cmd);
                     }
                 }
                 finally
@@ -941,7 +941,7 @@ namespace PetaPoco
                 {
                     using (var cmd = CreateCommand(_sharedConnection, commandType, sql, args))
                     {
-                        var val = await ExecuteScalarHelperAsync(cancellationToken, cmd).ConfigureAwait(false);
+                        var val = await ExecuteScalarHelperAsync(cancellationToken, cmd);
 
                         var u = Nullable.GetUnderlyingType(typeof(T));
                         if (u != null && (val == null || val == DBNull.Value))
@@ -1162,7 +1162,7 @@ namespace PetaPoco
 
             try
             {
-                reader = await ExecuteReaderHelperAsync(cancellationToken, cmd).ConfigureAwait(false);
+                reader = await ExecuteReaderHelperAsync(cancellationToken, cmd);
             }
             catch (Exception e)
             {
@@ -1190,7 +1190,7 @@ namespace PetaPoco
         /// <inheritdoc cref="IQueryAsync.QueryAsync{T}(Action{T}, CancellationToken, CommandType, string, object[])"/>
         protected virtual async Task ExecuteReaderAsync<T>(Action<T> action, CancellationToken cancellationToken, CommandType commandType, string sql, object[] args)
         {
-            await OpenSharedConnectionAsync(cancellationToken).ConfigureAwait(false);
+            await OpenSharedConnectionAsync(cancellationToken);
             try
             {
                 using (var cmd = CreateCommand(_sharedConnection, commandType, sql, args))
@@ -1200,7 +1200,7 @@ namespace PetaPoco
 
                     try
                     {
-                        reader = await ExecuteReaderHelperAsync(cancellationToken, cmd).ConfigureAwait(false);
+                        reader = await ExecuteReaderHelperAsync(cancellationToken, cmd);
                     }
                     catch (Exception e)
                     {
@@ -1223,7 +1223,7 @@ namespace PetaPoco
                             {
                                 if (readerAsync != null)
                                 {
-                                    if (!await readerAsync.ReadAsync(cancellationToken).ConfigureAwait(false))
+                                    if (!await readerAsync.ReadAsync(cancellationToken))
                                         return;
                                 }
                                 else
@@ -1483,7 +1483,7 @@ namespace PetaPoco
         public async Task<List<T>> FetchAsync<T>(CancellationToken cancellationToken, CommandType commandType, string sql, params object[] args)
         {
             var pocos = new List<T>();
-            await QueryAsync<T>(p => pocos.Add(p), cancellationToken, commandType, sql, args).ConfigureAwait(false);
+            await QueryAsync<T>(p => pocos.Add(p), cancellationToken, commandType, sql, args);
             return pocos;
         }
 #endif
@@ -1697,7 +1697,7 @@ namespace PetaPoco
             {
                 CurrentPage = page,
                 ItemsPerPage = maxItemsPerPage,
-                TotalItems = await ExecuteScalarAsync<long>(cancellationToken, countSql, countArgs).ConfigureAwait(false)
+                TotalItems = await ExecuteScalarAsync<long>(cancellationToken, countSql, countArgs)
             };
 
             result.TotalPages = result.TotalItems / maxItemsPerPage;
@@ -1706,7 +1706,7 @@ namespace PetaPoco
 
             OneTimeCommandTimeout = saveTimeout;
 
-            result.Items = await FetchAsync<T>(cancellationToken, pageSql, pageArgs).ConfigureAwait(false);
+            result.Items = await FetchAsync<T>(cancellationToken, pageSql, pageArgs);
 
             return result;
         }
@@ -1899,7 +1899,7 @@ namespace PetaPoco
 
         /// <inheritdoc/>
         public async Task<T> SingleAsync<T>(CancellationToken cancellationToken, string sql, params object[] args)
-            => (await FetchAsync<T>(cancellationToken, sql, args).ConfigureAwait(false)).Single();
+            => (await FetchAsync<T>(cancellationToken, sql, args)).Single();
 #endif
 
         #endregion
@@ -1941,7 +1941,7 @@ namespace PetaPoco
 
         /// <inheritdoc/>
         public async Task<T?> SingleOrDefaultAsync<T>(CancellationToken cancellationToken, string sql, params object[] args)
-            => (await FetchAsync<T>(cancellationToken, sql, args).ConfigureAwait(false)).SingleOrDefault();
+            => (await FetchAsync<T>(cancellationToken, sql, args)).SingleOrDefault();
 #endif
 
         private Sql GenerateSingleByKeySql<T>(object primaryKey)
@@ -1983,7 +1983,7 @@ namespace PetaPoco
 
         /// <inheritdoc/>
         public async Task<T> FirstAsync<T>(CancellationToken cancellationToken, string sql, params object[] args)
-            => (await FetchAsync<T>(cancellationToken, sql, args).ConfigureAwait(false)).First();
+            => (await FetchAsync<T>(cancellationToken, sql, args)).First();
 #endif
 
         #endregion
@@ -2013,7 +2013,7 @@ namespace PetaPoco
 
         /// <inheritdoc/>
         public async Task<T?> FirstOrDefaultAsync<T>(CancellationToken cancellationToken, string sql, params object[] args)
-            => (await FetchAsync<T>(cancellationToken, sql, args).ConfigureAwait(false)).FirstOrDefault();
+            => (await FetchAsync<T>(cancellationToken, sql, args)).FirstOrDefault();
 #endif
 
         #endregion
@@ -2284,7 +2284,7 @@ namespace PetaPoco
                                 return null;
                         }
 
-                        var id = await _provider.ExecuteInsertAsync(cancellationToken, this, cmd, primaryKeyName).ConfigureAwait(false);
+                        var id = await _provider.ExecuteInsertAsync(cancellationToken, this, cmd, primaryKeyName);
 
                         // Assign the ID back to the primary key property
                         if (primaryKeyName != null && !poco.GetType().Name.Contains("AnonymousType"))
@@ -2654,7 +2654,7 @@ namespace PetaPoco
                     using (var cmd = CreateCommand(_sharedConnection, string.Empty))
                     {
                         PreExecuteUpdate(tableName, primaryKeyName, poco, primaryKeyValue, columns, cmd);
-                        return await ExecuteNonQueryHelperAsync(cancellationToken, cmd).ConfigureAwait(false);
+                        return await ExecuteNonQueryHelperAsync(cancellationToken, cmd);
                     }
                 }
                 finally
@@ -3350,8 +3350,8 @@ namespace PetaPoco
             if (cmd is DbCommand dbCommand)
             {
                 var task = CommandHelperAsync(cancellationToken, dbCommand,
-                    async (t, c) => await c.ExecuteReaderAsync(t).ConfigureAwait(false));
-                return (IDataReader)await task.ConfigureAwait(false);
+                    async (t, c) => await c.ExecuteReaderAsync(t));
+                return (IDataReader)await task;
             }
             else
                 return ExecuteReaderHelper(cmd);
@@ -3371,8 +3371,8 @@ namespace PetaPoco
             if (cmd is DbCommand dbCommand)
             {
                 var task = CommandHelperAsync(cancellationToken, dbCommand,
-                    async (t, c) => await c.ExecuteNonQueryAsync(t).ConfigureAwait(false));
-                return (int)await task.ConfigureAwait(false);
+                    async (t, c) => await c.ExecuteNonQueryAsync(t));
+                return (int)await task;
             }
             else
                 return ExecuteNonQueryHelper(cmd);
@@ -3392,7 +3392,7 @@ namespace PetaPoco
             if (cmd is DbCommand dbCommand)
             {
                 return CommandHelperAsync(cancellationToken, dbCommand,
-                    async (t, c) => await c.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
+                    async (t, c) => await c.ExecuteScalarAsync(cancellationToken));
             }
             else
                 return Task.FromResult(ExecuteScalarHelper(cmd));
@@ -3413,7 +3413,7 @@ namespace PetaPoco
         private async Task<object> CommandHelperAsync(CancellationToken cancellationToken, DbCommand cmd, Func<CancellationToken, DbCommand, Task<object>> executionFunction)
         {
             DoPreExecute(cmd);
-            var result = await executionFunction(cancellationToken, cmd).ConfigureAwait(false);
+            var result = await executionFunction(cancellationToken, cmd);
             OnExecutedCommand(cmd);
             return result;
         }
