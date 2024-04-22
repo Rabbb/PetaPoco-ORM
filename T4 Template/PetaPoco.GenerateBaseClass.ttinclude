@@ -113,7 +113,7 @@ public partial class <#= RepoName #> : Database
 
         public Task<object> InsertAsync() { return repo.InsertAsync(this); }
 
-        public void SaveAsync() { repo.SaveAsync(this); }
+        public Task SaveAsync() { return repo.SaveAsync(this); }
         public Task<int> UpdateAsync() { return repo.UpdateAsync(this); }
 
         public Task<int> UpdateAsync(IEnumerable<string> columns) { return repo.UpdateAsync(this, columns); }
