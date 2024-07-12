@@ -64,15 +64,10 @@ namespace PetaPoco.Internal
         /// parameter.</exception>
         public static string ProcessQueryParams(string sql, object[] srcArgs, List<object> destArgs)
         {
-            // check repeats 2024-1-4 Ciaran
-            var params_set = new HashSet<string>();
             // TODO: Use same collection type for srcArgs and destArgs (`object[]` vs `List<object>`)
             return ParamPrefixRegex.Replace(sql, m =>
             {
                 string param = m.Value.Substring(1);
-                if (params_set.Contains(param))
-                    return m.Value;
-
                 object arg_val;
 
                 int paramIndex;
@@ -81,8 +76,6 @@ namespace PetaPoco.Internal
                     // Numbered parameter
                     if (paramIndex < 0 || paramIndex >= srcArgs.Length)
                     {
-                        // nature param
-                        params_set.Add(param);
                         return m.Value;
                     }
                     arg_val = srcArgs[paramIndex];
@@ -126,12 +119,9 @@ namespace PetaPoco.Internal
                     if (!found)
                     {
                         // nature param
-                        params_set.Add(param);
                         return m.Value;
                     }
                 }
-                
-                params_set.Add(param);
 
                 // Expand collections to parameter lists
                 if (arg_val.IsEnumerable())
